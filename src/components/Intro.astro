@@ -1,0 +1,133 @@
+---
+import paint from "../assets/paint.png";
+import portrait from "../assets/main-portrait.jpg";
+import { Image } from "astro:assets";
+---
+
+<div
+  class="relative mx-12 flex flex-col items-center justify-center xl:flex-row xl:gap-36"
+>
+  <div class="w-full xl:w-1/2">
+    <h1 class="text-center text-xl">
+      Enter Hua's Doodle-Dazzled <span class="font-bold">Digital Universe!</span
+      >
+    </h1>
+    <div class="relative">
+      <svg class="absolute h-full w-full overflow-visible">
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style={{ stopColor: "#DC3A2B", stopOpacity: 1 }}
+            ></stop>
+            <stop offset="100%" style={{ stopColor: "#E18510", stopOpacity: 1 }}
+            ></stop>
+          </linearGradient>
+        </defs>
+        <path
+          id="border-path"
+          fill="none"
+          stroke="url(#gradient)"
+          stroke-width="4"></path>
+      </svg>
+
+      <p id="anim-p" class="p-6">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, porro
+        ratione voluptates ut rerum earum perferendis commodi quis eius magni
+        cumque doloremque maxime ea repudiandae nihil ipsam corrupti, voluptate
+        nostrum.
+        <br />
+        <br />
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, porro ratione
+        voluptates ut rerum earum perferendis commodi quis eius magni cumque doloremque
+        maxime ea repudiandae nihil ipsam corrupti, voluptate nostrum.
+        <br />
+        <br />
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas, porro ratione
+        voluptates ut rerum earum perferendis commodi quis eius magni cumque doloremque
+        maxime ea repudiandae nihil ipsam corrupti, voluptate nostrum.
+      </p>
+    </div>
+
+    <div class="mb-12 flex justify-center pt-12 text-center lg:gap-16">
+      <div class="w-32">
+        <h2>Art Posts</h2>
+        <p id="art-counter" class="text-xl font-bold">85</p>
+      </div>
+      <div class="w-32">
+        <h2>Youtobe</h2>
+        <p id="youtube-counter" class="text-xl font-bold">325k</p>
+      </div>
+      <div class="w-32">
+        <h2>Reviews</h2>
+        <p id="reviews-counter" class="text-xl font-bold">50</p>
+      </div>
+    </div>
+  </div>
+  <div class="relative">
+    <Image class="relative h-full rounded-xl" src={portrait} alt="portrait" />
+    <div class="absolute bottom-0 right-0 translate-y-1/4">
+      <Image src={paint} alt="paint" />
+    </div>
+  </div>
+</div>
+
+<div class="mt-12 h-4 w-full bg-white"></div>
+
+<style>
+  #border-path {
+    animation: draw 1s forwards 1s ease-out;
+  }
+
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>
+
+<script>
+  // line function
+  function updatePath() {
+    const textMain = document.querySelector("#anim-p") as HTMLElement;
+    const path = document.querySelector("#border-path") as SVGPathElement;
+
+    if (textMain && path) {
+      path.setAttribute(
+        "d",
+        `M0,0 V${textMain.offsetHeight} h${textMain.offsetWidth} v${textMain.offsetHeight / 5}`,
+      );
+    }
+    const pathLength = path.getTotalLength();
+    path.style.strokeDasharray = pathLength.toString();
+    path.style.strokeDashoffset = pathLength.toString();
+  }
+
+  // increment function
+  function incrementCounter(
+    selector: string,
+    current: number,
+    target: number,
+    duration: number,
+    letter?: string,
+  ) {
+    let counter = document.getElementById(selector);
+    let stepTime = Math.abs(Math.floor(duration / target));
+    if (current < target && counter) {
+      current++;
+      letter
+        ? (counter.innerText = current.toString() + letter)
+        : (counter.innerText = current.toString());
+    }
+    setTimeout(
+      () => incrementCounter(selector, current, target, duration, letter),
+      stepTime,
+    );
+  }
+  // increment
+  incrementCounter("art-counter", 0, 85, 500);
+  incrementCounter("youtube-counter", 0, 325, 500, "k");
+  incrementCounter("reviews-counter", 0, 250, 500);
+
+  // line
+  window.addEventListener("DOMContentLoaded", updatePath);
+  window.addEventListener("resize", updatePath);
+</script>
